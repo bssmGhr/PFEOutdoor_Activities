@@ -1,6 +1,53 @@
-import React from 'react'
+import React, { useState } from 'react';
+import axios from 'axios';
 
 function Contact() {
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        phone: '',
+        message: ''
+    });
+    const [formError, setFormError] = useState('');
+    const [serverResponseMessage, setServerResponseMessage] = useState('');
+    const api_url = import.meta.env.VITE_BACKEND_URL;
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prevData => ({
+            ...prevData,
+            [name]: value
+        }));
+        setFormError('');
+        setServerResponseMessage('');
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setFormError('');
+        setServerResponseMessage('');
+
+        const { name, email, message } = formData;
+        if (!name || !email || !message) {
+            setFormError('Veuillez remplir tous les champs obligatoires (Nom, E-mail, Message).');
+            return;
+        }
+
+        try {
+            // L'endpoint backend sera quelque chose comme /api/contact/submit
+            const response = await axios.post(`${api_url}/api/contact/submit`, formData);
+            setServerResponseMessage(response.data.message || 'Message envoyé avec succès !');
+            setFormData({ name: '', email: '', phone: '', message: '' }); // Clear form
+        } catch (error) {
+            console.error('Erreur lors de l\'envoi du message:', error);
+            if (error.response && error.response.data && error.response.data.message) {
+                setServerResponseMessage(error.response.data.message);
+            } else {
+                setServerResponseMessage('Erreur lors de l\'envoi du message. Veuillez réessayer.');
+            }
+        }
+    };
+
     return (
         <section className="contact py-5">
             <div className="container">
@@ -24,22 +71,28 @@ function Contact() {
                 </div>
 
                 <h3 className="text-center mt-5 mb-3">Envoyez-nous un message</h3>
-                <form className="contact-form needs-validation" noValidate>
+                {formError && <div className="alert alert-danger">{formError}</div>}
+                {serverResponseMessage && (
+                    <div className={`alert ${serverResponseMessage.includes("succès") || serverResponseMessage.includes("successfully") ? "alert-success" : "alert-warning"} `}>
+                        {serverResponseMessage}
+                    </div>
+                )}
+                <form className="contact-form" onSubmit={handleSubmit}>
                     <div className="mb-3">
                         <label htmlFor="name" className="form-label">Nom&nbsp;:</label>
-                        <input type="text" id="name" name="name" className="form-control" required />
+                        <input type="text" id="name" name="name" className="form-control" value={formData.name} onChange={handleChange} required />
                     </div>
                     <div className="mb-3">
                         <label htmlFor="email" className="form-label">E-mail&nbsp;:</label>
-                        <input type="email" id="email" name="email" className="form-control" required />
+                        <input type="email" id="email" name="email" className="form-control" value={formData.email} onChange={handleChange} required />
                     </div>
                     <div className="mb-3">
                         <label htmlFor="phone" className="form-label">Numéro de téléphone&nbsp;:</label>
-                        <input type="tel" id="phone" name="phone" className="form-control" /> {/* Removed required for flexibility */}
+                        <input type="tel" id="phone" name="phone" className="form-control" value={formData.phone} onChange={handleChange} />
                     </div>
                     <div className="mb-3">
                         <label htmlFor="message" className="form-label">Message&nbsp;:</label>
-                        <textarea id="message" name="message" rows="5" className="form-control" required></textarea>
+                        <textarea id="message" name="message" rows="5" className="form-control" value={formData.message} onChange={handleChange} required></textarea>
                     </div>
                     <button type="submit" className="btn btn-primary w-100">Envoyer</button>
                 </form>

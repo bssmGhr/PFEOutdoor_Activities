@@ -24,7 +24,7 @@ function Header({ isLoggedIn, username, onLogout }) {
                                     </ul>
                                      </div> ) : ( <> 
                                      <Link className="btn btn-outline-light me-2" to="/connexion">Connexion</Link> 
-                                     <Link className="btn btn-warning" to="/inscription">Créer compte</Link> </> )}
+                                     <Link className="btn btn-warning" to="/inscription">Créer compte*</Link> </> )}
                            </div>
 
                 </div>

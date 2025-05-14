@@ -98,7 +98,8 @@ function authenticateToken(req, res, next) {
 
 const signupuser=async (req, res) => {
     try {
-        const { name, email, password } = req.body;
+        // Updated to accept new fields from the frontend
+        const { firstName, lastName, email, password, age, niveau } = req.body;
         const hashedPassword=password;
 
         // Check if the user already exists
@@ -108,7 +109,15 @@ const signupuser=async (req, res) => {
         }
 
         // Create a new user instance
-         const newUser = new User({ username: name, email, password: hashedPassword, });
+         // Ensure your User model (usersm.cjs) is updated to include these fields
+         const newUser = new User({ 
+            firstName, 
+            lastName, 
+            email, 
+            password: hashedPassword, // Assuming your model handles hashing or you do it before this step
+            age,
+            niveau 
+        });
           // Save the new user to the database 
           const result = await newUser.save();
 

@@ -9,11 +9,14 @@ const users=require('./routes/users.cjs')
 app.use(cors()); 
 app.get('/api/endpoint', (req, res) => { res.json({ message: 'CORS enabled' }); });
 dotenv.config();
+const contactRoutes = require('./routes/contactRoutes.cjs'); // Ajustez le chemin
+
 // Middleware to parse JSON
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "../src")));
 app.use('/api/endpoint/users',users)
+app.use('/api/contact', contactRoutes); // Nouvelles routes pour le contact
 const { notFound, errorHandler } = require("./middleware/errorMiddleware.cjs");
 
 // Serve static files from React's build folder
