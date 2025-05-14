@@ -1,0 +1,9 @@
+.trainers { display: flex; 
+    justify-content: space-around; 
+    /* Pour espacer les éléments de manière égale */
+     align-items: center;
+      /* Pour centrer les éléments verticalement */ 
+      gap: 20px; /* Pour ajouter de l'espace entre les éléments */ } 
+
+.trainer { text-align: center; 
+    /* Pour centrer le texte sous chaque image */ }

@@ -1,0 +1,33 @@
+ /* Styles personnalisés */
+ body {
+     background-color: #f8f9fa;
+ }
+
+ .pricing-plan {
+     background-color: gray;
+     border-radius: 10px;
+     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+     padding: 20px;
+     margin: 10px;
+     text-align: center;
+     transition: transform 0.3s;
+ }
+
+ .pricing-plan:hover {
+     transform: scale(1.05);
+ }
+
+ .pricing-plan h3 {
+     color: #007bff;
+ }
+
+ .pricing-plan p {
+     font-size: 16px;
+     margin: 15px 0;
+ }
+
+ .pricing-plan .price {
+     font-size: 36px;
+     font-weight: bold;
+     color: #28a745;
+ }
