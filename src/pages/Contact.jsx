@@ -61,7 +61,7 @@ function Contact() {
                 <h2 className="text-center mb-4">Contactez-nous</h2>
                 <p className="text-center">Adresse&nbsp;: Rue Ebn Jazzar Habira</p>
                 <p className="text-center">Téléphone&nbsp;: +21620814347</p>
-                <p className="text-center">E-mail&nbsp;: info@outdooractivities.com</p>
+                <p className="text-center">E-mail-&nbsp;: info@outdooractivities.com</p>
 
                 {/* Google Map Embed */}
                 <div className="map-container mt-4 mb-5"> {/* Ajout de marges autour de la carte */}

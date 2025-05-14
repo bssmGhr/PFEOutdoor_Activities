@@ -8,6 +8,7 @@ import {Link} from "react-router-dom"
         firstName: '',
         lastName: '',
         email: '',
+        username: '', // Ajout du champ username
         password: '',
         confirmPassword: '',
         age: '',
@@ -34,10 +35,10 @@ import {Link} from "react-router-dom"
         setFormError('');
         setServerResponseMessage('');
 
-        const { firstName, lastName, email, password, confirmPassword, age, niveau } = formData;
+        const { firstName, lastName, email, username, password, confirmPassword, age, niveau } = formData;
 
         // Custom validation
-        if (!firstName || !lastName || !email || !password || !confirmPassword || !age || !niveau) {
+        if (!firstName || !lastName || !email || !username || !password || !confirmPassword || !age || !niveau) {
             setFormError("Veuillez remplir tous les champs.");
             return;
         }
@@ -58,6 +59,7 @@ import {Link} from "react-router-dom"
                 firstName, 
                 lastName, 
                 email, 
+                username,
                 password,
                 age: parseInt(age), // Ensure age is sent as a number
                 niveau
@@ -91,6 +93,10 @@ import {Link} from "react-router-dom"
                 <div className="mb-3">
                     <label htmlFor="signup-email" className="form-label">E-mail&nbsp;:</label>
                     <input type="email" className="form-control" id="signup-email" name="email" value={formData.email} onChange={handleChange} required />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="signup-username" className="form-label">Nom d'utilisateur&nbsp;:</label>
+                    <input type="text" className="form-control" id="signup-username" name="username" value={formData.username} onChange={handleChange} required minLength="3" />
                 </div>
                 <div className="mb-3">
                     <label htmlFor="signup-password" className="form-label">Mot de passe&nbsp;:</label>

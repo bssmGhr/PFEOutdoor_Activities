@@ -1,43 +1,56 @@
-const { JWT_SECRET, client, database1 } = require("../config/db.cjs"); // Ensure correct path to your db.js file
-const { ObjectId } = require("mongodb");
-const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
-// Mise à jour du modèle User avec les informations d'abonnement
+// Extrait de ce à quoi pourrait ressembler server/models/usersm.cjs
+const mongoose = require('mongoose');
+// const bcrypt = require('bcrypt'); // si vous hachez le mdp ici
+
 const userSchema = new mongoose.Schema({
-    username: { type: String, required: true, unique: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    createdAt: { type: Date, default: Date.now },
-    subscriptionPlan: {
-        type: mongoose.Schema.Types.ObjectId,
+    firstName: {
+        type: String,
+        required: [true, "Le prénom est requis"],
+        trim: true
     },
+    lastName: {
+        type: String,
+        required: [true, "Le nom de famille est requis"],
+        trim: true
+    },
+    email: {
+        type: String,
+        required: [true, "L'email est requis"],
+        unique: true, // L'email doit être unique
+        lowercase: true,
+        trim: true
+    },
+    username: { // <<<< CHAMP USERNAME AJOUTÉ/MODIFIÉ
+        type: String,
+        required: [true, "Le nom d'utilisateur est requis"],
+        unique: true, // Le nom d'utilisateur doit être unique
+        trim: true,
+        minlength: [3, "Le nom d'utilisateur doit contenir au moins 3 caractères"]
+        // Vous pouvez ajouter d'autres validateurs, comme un regex pour les caractères autorisés
+    },
+    password: {
+        type: String,
+        required: [true, "Le mot de passe est requis"],
+        minlength: 8 // La validation de la complexité est mieux gérée côté client ou dans un hook pre-save
+    },
+    age: {
+        type: Number,
+        required: [true, "L'âge est requis"],
+        min: 1
+    },
+    niveau: {
+        type: String,
+        required: [true, "Le niveau est requis"],
+        enum: ['etudiant', 'bac', 'bac+2', 'bac+3', 'bac+5', 'cadre', 'autre']
+    }
+    // ... autres champs comme createdAt, updatedAt, etc.
+}, { timestamps: true }); // Ajoute createdAt et updatedAt automatiquement
 
-    role: { type: String, enum: ["user", "admin"], default: "user" },
-});
+// Hook pre-save pour hacher le mot de passe si vous le faites ici
+// userSchema.pre('save', async function(next) { ... });
 
-// Collection des abonnements
-const subscriptionSchema = new mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
-    planName: ["Basic Membership", "Standard Membership", "Premium Membership"],
+// Méthode pour comparer le mot de passe
+// userSchema.methods.comparePassword = async function(candidatePassword) { ... };
 
-    price: { type: Number, required: true },
-});
-
-
-// Pre-save hook to hash the password 
-userSchema.pre('save', async function (next) { 
-    if (this.isModified('password')) 
-        { this.password = await bcrypt.hash(this.password, 10);
-
-         } next(); });
-         
-// Method to compare passwords 
-userSchema.methods.comparePassword = async function (candidatePassword) { 
-    return await bcrypt.compare(candidatePassword, this.password); 
-};
-const User = mongoose.model("User", userSchema);
-const Subscription = mongoose.model("Subscription", subscriptionSchema);
-module.exports = {
-    usersCollection: User,
-    Subscription,
-};
+const User = mongoose.model('User', userSchema);
+module.exports = User; // ou { usersCollection: User } selon votre structure d'export

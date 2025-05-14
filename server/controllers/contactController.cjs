@@ -2,6 +2,7 @@
 const ContactMessage = require('../models/contactMessageModel.cjs'); // Ajustez le chemin si nécessaire
 
 const submitContactForm = async (req, res) => {
+    console.log('arrivé')
     try {
         const { name, email, phone, message } = req.body;
 
