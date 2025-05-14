@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "../src")));
 app.use('/api/endpoint/users',users)
-app.use('/api/contact', contactRoutes); // Nouvelles routes pour le contact
+app.use('/api/endpoint/contact', contactRoutes); // Nouvelles routes pour le contact
 const { notFound, errorHandler } = require("./middleware/errorMiddleware.cjs");
 
 // Serve static files from React's build folder

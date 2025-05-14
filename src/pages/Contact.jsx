@@ -9,7 +9,7 @@ function Contact() {
         message: ''
     });
     const [formError, setFormError] = useState('');
-    const [serverResponseMessage, setServerResponseMessage] = useState('');
+    // const [serverResponseMessage, setServerResponseMessage] = useState(''); // Plus nécessaire si on utilise alert()
     const api_url = import.meta.env.VITE_BACKEND_URL;
 
     const handleChange = (e) => {
@@ -19,31 +19,38 @@ function Contact() {
             [name]: value
         }));
         setFormError('');
-        setServerResponseMessage('');
+        // setServerResponseMessage(''); // Plus nécessaire
     };
 
     const handleSubmit = async (e) => {
+        console.log('oui')
         e.preventDefault();
         setFormError('');
-        setServerResponseMessage('');
+        // setServerResponseMessage(''); // Plus nécessaire
 
-        const { name, email, message } = formData;
-        if (!name || !email || !message) {
-            setFormError('Veuillez remplir tous les champs obligatoires (Nom, E-mail, Message).');
+        const { name, email, message,phone } = formData;
+        console.log('oui')
+        console.log(name,email,message,phone)
+        if (!name || !email || !message || !phone) {
+            setFormError('Veuillez remplir tous les champs obligatoires (Nom, E-mail,Phone, Message).');
+           alert('Veuillez remplir tous les champs obligatoires (Nom, E-mail,Phone, Message).')
+           console.log('return')
             return;
         }
 
         try {
             // L'endpoint backend sera quelque chose comme /api/contact/submit
-            const response = await axios.post(`${api_url}/api/contact/submit`, formData);
-            setServerResponseMessage(response.data.message || 'Message envoyé avec succès !');
-            setFormData({ name: '', email: '', phone: '', message: '' }); // Clear form
+            const response = await axios.post(`${api_url}/api/endpoint/contact/submit`, formData);
+            console.log(response)
+            alert(response.data.message || 'Message envoyé avec succès !');
+            setFormData({ name: '', email: '', phone: '', message: ''  }); // Clear form
         } catch (error) {
+            console.log(error)
             console.error('Erreur lors de l\'envoi du message:', error);
             if (error.response && error.response.data && error.response.data.message) {
-                setServerResponseMessage(error.response.data.message);
+                alert(error.response.data.message);
             } else {
-                setServerResponseMessage('Erreur lors de l\'envoi du message. Veuillez réessayer.');
+                alert('Erreur lors de l\'envoi du message. Veuillez réessayer.');
             }
         }
     };
@@ -72,11 +79,7 @@ function Contact() {
 
                 <h3 className="text-center mt-5 mb-3">Envoyez-nous un message</h3>
                 {formError && <div className="alert alert-danger">{formError}</div>}
-                {serverResponseMessage && (
-                    <div className={`alert ${serverResponseMessage.includes("succès") || serverResponseMessage.includes("successfully") ? "alert-success" : "alert-warning"} `}>
-                        {serverResponseMessage}
-                    </div>
-                )}
+                {/* L'affichage du serverResponseMessage est maintenant géré par alert() */}
                 <form className="contact-form" onSubmit={handleSubmit}>
                     <div className="mb-3">
                         <label htmlFor="name" className="form-label">Nom&nbsp;:</label>
